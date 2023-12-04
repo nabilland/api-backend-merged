@@ -4,30 +4,30 @@ const db = require('../lib/db.js');
 
 module.exports = {
     createOrder: (req, res) => {
-    const userId = req.params.id;
+        const userId = req.params.id;
+        const { collectorId, waste_type, waste_qty, user_notes, recycle_fee, pickup_fee, pickup_latitude, pickup_longitude } = req.body;
 
-    if(!userId){
-        return res.status(400).json({
-            error: 'Bad request: Missing user ID',
-        });
-    }
-
-    const { waste_type, waste_qty, user_notes, recycle_fee, pickup_fee, pickup_latitude, pickup_longitude } = req.body;
-    const order_status = 'pick_up';
-    const subtotal_fee = Number(pickup_fee) + Number(recycle_fee);
-    const insertQuery = `INSERT INTO orders (user_id, waste_type, waste_qty, user_notes, recycle_fee, pickup_fee, subtotal_fee, order_status, order_datetime, pickup_datetime, pickup_latitude, pickup_longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, now(), now(), ?, ?)`;
-    db.query(insertQuery, [userId, waste_type, waste_qty, user_notes, recycle_fee, pickup_fee, subtotal_fee, order_status, pickup_latitude, pickup_longitude], (error) => {
-        if (error) {
-            console.error('Error inserting order:', error);
-            return res.status(500).json({
-                error: 'An internal server error has occurred',
+        if(!userId || !collectorId){
+            return res.status(400).json({
+                error: 'Bad request: Missing user ID or collector ID',
             });
         }
-        res.status(201).json({
-            message: 'Order added successfully',
+
+        const order_status = 'pick_up';
+        const subtotal_fee = Number(pickup_fee) + Number(recycle_fee);
+        const insertQuery = `INSERT INTO orders (user_id, collector_id, waste_type, waste_qty, user_notes, recycle_fee, pickup_fee, subtotal_fee, order_status, order_datetime, pickup_datetime, pickup_latitude, pickup_longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now(), ?, ?)`;
+        db.query(insertQuery, [userId, collectorId, waste_type, waste_qty, user_notes, recycle_fee, pickup_fee, subtotal_fee, order_status, pickup_latitude, pickup_longitude], (error) => {
+            if (error) {
+                console.error('Error inserting order:', error);
+                return res.status(500).json({
+                    error: 'An internal server error has occurred',
+                });
+            }
+            res.status(201).json({
+                message: 'Order added successfully',
+            });
         });
-      });
-    },
+    },
 
     getOrderDetail: (req, res) => {
         const orderId = req.params.id;
