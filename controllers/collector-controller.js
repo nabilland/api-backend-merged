@@ -177,13 +177,13 @@ module.exports = {
                 const updateQuery = `UPDATE collectors SET id = ? WHERE user_id = ?`;
                 db.query(updateQuery, [id, userId], (error) => {
                     if (error) {
-                        console.error('Error updating collector current location:', error);
+                        console.error('Error updating collector ID:', error);
                         return res.status(500).json({
                             error: 'An internal server error has occurred',
                         });
                     }
                     res.status(200).json({
-                        message: 'Collector current location updated successfully',
+                        message: 'Collector ID updated successfully',
                     });
                 });
             }
