@@ -17,6 +17,8 @@ router.get('/all', collectorController.getAllCollectors);
 router.get('/:id', userMiddleware.userAuthorization('collector'), collectorController.getCollectorProfile);
 // Route to update collector profile by ID (userId)
 router.put('/update-profile/:id', userMiddleware.userAuthorization('collector'), collectorController.updateCollectorProfile);
+// Route to update collector ID by ID (userId)
+router.put('/update-id/:id', userMiddleware.userAuthorization('collector'), collectorController.updateCollectorId);
 // Route to update drop location of collector by ID (userId)
 router.put('/update-droploc/:id', userMiddleware.userAuthorization('collector'), collectorController.updateDropLocation);
 // Route to update current location of collector by ID (userId)

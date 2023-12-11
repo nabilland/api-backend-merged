@@ -151,6 +151,45 @@ module.exports = {
         });
     },
 
+    updateCollectorId: (req, res) => {
+        const userId = req.params.id;
+
+        if(!userId){
+            return res.status(400).json({
+                error: 'Bad request: Missing user ID',
+            });
+        }
+
+        const { id } = req.body;
+
+        // Check if data for the user already exists in collectors table
+        const selectQuery = `SELECT * FROM collectors WHERE user_id = ?`;
+        
+        db.query(selectQuery, [userId], (error, results) => {
+            if (error) {
+                console.error('Error checking collector data:', error);
+                return res.status(500).json({
+                    error: 'An internal server error has occurred',
+                });
+            }
+            if (results && results.length > 0) {
+                // Data already exists, perform UPDATE
+                const updateQuery = `UPDATE collectors SET id = ? WHERE user_id = ?`;
+                db.query(updateQuery, [id, userId], (error) => {
+                    if (error) {
+                        console.error('Error updating collector current location:', error);
+                        return res.status(500).json({
+                            error: 'An internal server error has occurred',
+                        });
+                    }
+                    res.status(200).json({
+                        message: 'Collector current location updated successfully',
+                    });
+                });
+            }
+        });
+    },
+
     getAllCollectors: (req, res) => {   
         const getAllCollectorsQuery = `SELECT * FROM users LEFT JOIN collectors ON users.id = collectors.user_id`;
         
