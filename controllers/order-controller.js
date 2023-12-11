@@ -293,6 +293,7 @@ module.exports = {
             const userOrderData = results.map(order => ({
                 order_id: order.id,
                 user_id: order.user_id,
+                collector_id: order.collector_id,
                 waste_type: order.waste_type,
                 waste_qty: order.waste_qty,
                 user_notes: order.user_notes,
@@ -334,6 +335,7 @@ module.exports = {
             }
             const collectorOrderData = results.map(order => ({
                 order_id: order.id,
+                user_id: order.user_id,
                 collector_id: order.collector_id,
                 waste_type: order.waste_type,
                 waste_qty: order.waste_qty,
