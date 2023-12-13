@@ -29,5 +29,7 @@ router.put('/update-status/:id', userMiddleware.userAuthorization('collector'), 
 router.get('/history-user/:id', userMiddleware.userAuthorization('user'), orderController.getOrderHistoryUser); //userId
 // Route to get order data  with 'delivered' status
 router.get('/history-collector/:id', userMiddleware.userAuthorization('collector'), orderController.getOrderHistoryCollector); //collectorId
+// Route to get order data  with 'delivered' status
+router.get('/orderdata-collector/:id', userMiddleware.userAuthorization('collector'), orderController.getAllOrderDataCollector); //collectorId
 
 module.exports = router;
