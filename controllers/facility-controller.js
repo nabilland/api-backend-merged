@@ -1,4 +1,4 @@
-// controllers/collector-controller.js
+// controllers/facility-controller.js
 
 const db = require('../lib/db.js');
 
@@ -151,45 +151,6 @@ module.exports = {
         });
     },
 
-    updateCollectorId: (req, res) => {
-        const userId = req.params.id;
-
-        if(!userId){
-            return res.status(400).json({
-                error: 'Bad request: Missing user ID',
-            });
-        }
-
-        const { id } = req.body;
-
-        // Check if data for the user already exists in collectors table
-        const selectQuery = `SELECT * FROM facilities WHERE user_id = ?`;
-        
-        db.query(selectQuery, [userId], (error, results) => {
-            if (error) {
-                console.error('Error checking facility data:', error);
-                return res.status(500).json({
-                    error: 'An internal server error has occurred',
-                });
-            }
-            if (results && results.length > 0) {
-                // Data already exists, perform UPDATE
-                const updateQuery = `UPDATE facilities SET id = ? WHERE user_id = ?`;
-                db.query(updateQuery, [id, userId], (error) => {
-                    if (error) {
-                        console.error('Error updating facility ID:', error);
-                        return res.status(500).json({
-                            error: 'An internal server error has occurred',
-                        });
-                    }
-                    res.status(200).json({
-                        message: 'Facility ID updated successfully',
-                    });
-                });
-            }
-        });
-    },
-
     updateFacilityName: (req, res) => {
         const userId = req.params.id;
 
@@ -223,6 +184,45 @@ module.exports = {
                     }
                     res.status(200).json({
                         message: 'Facility Name updated successfully',
+                    });
+                });
+            }
+        });
+    },
+
+    updateCollectorId: (req, res) => {
+        const userId = req.params.id;
+
+        if(!userId){
+            return res.status(400).json({
+                error: 'Bad request: Missing user ID',
+            });
+        }
+
+        const { id } = req.body;
+
+        // Check if data for the user already exists in collectors table
+        const selectQuery = `SELECT * FROM facilities WHERE user_id = ?`;
+        
+        db.query(selectQuery, [userId], (error, results) => {
+            if (error) {
+                console.error('Error checking facility data:', error);
+                return res.status(500).json({
+                    error: 'An internal server error has occurred',
+                });
+            }
+            if (results && results.length > 0) {
+                // Data already exists, perform UPDATE
+                const updateQuery = `UPDATE facilities SET id = ? WHERE user_id = ?`;
+                db.query(updateQuery, [id, userId], (error) => {
+                    if (error) {
+                        console.error('Error updating facility ID:', error);
+                        return res.status(500).json({
+                            error: 'An internal server error has occurred',
+                        });
+                    }
+                    res.status(200).json({
+                        message: 'Facility ID updated successfully',
                     });
                 });
             }

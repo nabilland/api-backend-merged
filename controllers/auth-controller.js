@@ -91,7 +91,7 @@ module.exports = {
                                     }
 
                                     db.query(
-                                        'INSERT INTO collectors (user_id, current_latitude, current_longitude, drop_latitude, drop_longitude) VALUES (?, ?, ?, ?, ?)',
+                                        'INSERT INTO facilities (user_id, facility_name) VALUES (?, ?, ?, ?, ?)',
                                         [newUserId, 0, 0, 0, 0], // Ganti value1 dan value2 dengan nilai yang sesuai
                                         (orderErr, orderResult) => {
                                             if (orderErr) {
@@ -120,10 +120,9 @@ module.exports = {
     loginUser: (req, res, next) => {
         db.query(
             `
-            SELECT users.*, collectors.ID AS collector_ID, collectors.drop_latitude, collectors.drop_longitude,
-            collectors.current_latitude, collectors.current_longitude
+            SELECT users.*, facilities.ID AS facility_ID, facilities.facility_name
             FROM users
-            LEFT JOIN collectors ON users.ID = collectors.user_ID
+            LEFT JOIN facilities ON users.ID = facilities.user_ID
             WHERE users.username = ? OR users.email = ?
             `,
             [req.body.username, req.body.email],
@@ -157,11 +156,8 @@ module.exports = {
                                     username: result[0].username,
                                     userId: result[0].id,
                                     role: result[0].role,
-                                    collectorId: result[0].collector_ID, // Include collector ID in the payload
-                                    drop_latitude: result[0].drop_latitude,
-                                    drop_longitude: result[0].drop_longitude,
-                                    current_latitude: result[0].current_latitude,
-                                    current_longitude: result[0].current_longitude, 
+                                    facilityID: result[0].facility_ID, // Include facility ID in the payload
+                                    facility_name: result[0].facility_name, 
                                 },
                                 'SECRETKEY',
                                 { expiresIn: '7d' }

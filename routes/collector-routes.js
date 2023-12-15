@@ -9,6 +9,8 @@ const userController = require('../controllers/user-controller.js');
 const collectorController = require('../controllers/collector-controller.js');
 const orderController = require('../controllers/order-controller.js');
 const contentController = require('../controllers/content-controller.js');
+const facilityController = require('../controllers/facility-controller.js');
+
 
 // Route to get all data collector
 router.get('/all', collectorController.getAllCollectors);
@@ -23,5 +25,8 @@ router.put('/update-id/:id', userMiddleware.userAuthorization('collector'), coll
 router.put('/update-droploc/:id', userMiddleware.userAuthorization('collector'), collectorController.updateDropLocation);
 // Route to update current location of collector by ID (userId)
 router.put('/update-currloc/:id', userMiddleware.userAuthorization('collector'), collectorController.updateCurrentLocation);
+// Route to update current location of collector by ID (userId)
+router.put('/update-facility-name/:id', userMiddleware.userAuthorization('collector'), facilityController.updateFacilityName);
+
 
 module.exports = router;
