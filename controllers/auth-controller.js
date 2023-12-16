@@ -91,23 +91,19 @@ module.exports = {
                                     }
 
                                     db.query(
-                                        'INSERT INTO facilities (user_id, facility_name) VALUES (?, ?, ?, ?, ?)',
-                                        [newUserId, 0, 0, 0, 0], // Ganti value1 dan value2 dengan nilai yang sesuai
-                                        (orderErr, orderResult) => {
-                                            if (orderErr) {
+                                        'INSERT INTO facilities (user_id, facility_name) VALUES (?, ?)',
+                                        [newUserId, null], // Ganti value1 dan value2 dengan nilai yang sesuai
+                                        (err, result) => {
+                                            if (err) {
                                                 return res.status(400).send({
-                                                    message: orderErr,
+                                                    message: err,
                                                 });
                                             }
                                             return res.status(201).send({
-                                                message: 'Registered and order placed!',
+                                                message: 'Registered!',
                                             });
                                         }
                                     );
-
-                                    return res.status(201).send({
-                                        message: 'Registered!',
-                                    });
                                 }
                             );
                         }
@@ -151,12 +147,13 @@ module.exports = {
                         }
                         if (bResult) {
                             // password match
+                            const facilityIDAsString = String(result[0].facility_ID);
+
                             const token = jwt.sign(
                                 {
                                     username: result[0].username,
                                     userId: result[0].id,
                                     role: result[0].role,
-                                    facilityID: result[0].facility_ID, // Include facility ID in the payload
                                     facility_name: result[0].facility_name, 
                                 },
                                 'SECRETKEY',
@@ -175,7 +172,10 @@ module.exports = {
                                     return res.status(200).send({
                                         message: 'Logged in successfully!',
                                         token,
-                                        user: result[0],
+                                        user: {
+                                            ...result[0],
+                                        facility_ID: facilityIDAsString,
+                                        },
                                     });
                                 }
                             );
