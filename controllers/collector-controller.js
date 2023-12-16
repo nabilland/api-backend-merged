@@ -230,7 +230,17 @@ module.exports = {
     },
 
     getAllCollectors: (req, res) => {   
-        const getAllCollectorsQuery = `SELECT * FROM users LEFT JOIN facilities ON users.id = facilities.user_id`;
+        const getAllCollectorsQuery = `
+        SELECT 
+            facilities.id AS facility_id,
+            facilities.user_id,
+            facilities.facility_name,
+            users.username,
+            users.email,
+            users.phone,
+            users.role
+        FROM facilities
+        LEFT JOIN users ON facilities.user_id = users.id`;
         
         db.query(getAllCollectorsQuery, (error, results) => {
             if (error) {
