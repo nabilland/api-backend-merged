@@ -12,10 +12,9 @@ const contentController = require('../controllers/content-controller.js');
 const facilityController = require('../controllers/facility-controller.js');
 
 
-// Route to update facility name by ID (facilityId)
+// Route to update facility name by user ID
 router.put('/update-facility-name/:id', userMiddleware.userAuthorization('collector'), facilityController.updateFacilityName);
-router.put('/get-facility-name/:id', userMiddleware.userAuthorization('collector'), facilityController.getFacilityNameById);
-router.put('/get-user-data/:id', userMiddleware.userAuthorization('collector'), facilityController.getUserDataByID);
-
+// Route to get user data by facility ID
+router.get('/user-data/:id', userMiddleware.userAuthorization('collector'), facilityController.getUserDataById);
 
 module.exports = router;

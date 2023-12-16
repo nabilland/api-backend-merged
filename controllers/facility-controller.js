@@ -43,7 +43,7 @@ module.exports = {
         });
     },
 
-    getUserDataByID: (req, res) => {
+    getUserDataById: (req, res) => {
         const facilityId  = req.params.id;
 
         if(!facilityId){
@@ -52,9 +52,9 @@ module.exports = {
             });
         }
 
-        const selectQuery = `SELECT * FROM facilities OUTER JOIN users ON facilities.user_id = users.id WHERE id = ?`;
+        const selectQuery = `SELECT * FROM facilities INNER JOIN users ON facilities.user_id = users.id WHERE facilities.id = ?`;
         
-        db.query(selectQuery, [userId], (error, results) => {
+        db.query(selectQuery, [facilityId], (error, results) => {
             if (error) {
                 console.error('Error retrieving user profile:', error);
                 return res.status(500).json({
@@ -62,38 +62,14 @@ module.exports = {
                 });
             }
             const userData = results.map(user => ({
+                facility_name: user.facility_name,
                 collector_name: user.name,
                 email: user.email,
                 phone: user.phone,
-                facility_name: user.facility_name,
             }));
             res.status(200).json(userData);
         });
     },
 
-    getFacilityNameById: (req, res) => {
-        const facilityId  = req.params.id;
-
-        if(!facilityId){
-            return res.status(400).json({
-                error: 'Bad request: Missing facility ID',
-            });
-        }
-
-        const selectQuery = `SELECT facility_name FROM facilities WHERE id = ?`;
-        
-        db.query(selectQuery, [userId], (error, results) => {
-            if (error) {
-                console.error('Error retrieving user profile:', error);
-                return res.status(500).json({
-                    error: 'An internal server error occured',
-                });
-            }
-            const userData = results.map(facility => ({
-                facility_name: facility.facility_name,
-            }));
-            res.status(200).json(userData);
-        });
-    },
 
 }
