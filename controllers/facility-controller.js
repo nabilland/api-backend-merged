@@ -71,5 +71,39 @@ module.exports = {
         });
     },
 
+    searchFacilityById: (req, res) => {
+        const facilityId = req.params.id;
+    
+        if (!facilityId) {
+            return res.status(400).json({
+                error: 'Bad request: Missing facility ID',
+            });
+        }
+    
+        const searchQuery = `SELECT * FROM facilities WHERE id = ?`;
+    
+        db.query(searchQuery, [facilityId], (error, results) => {
+            if (error) {
+                console.error('Error searching facility data by ID:', error);
+                return res.status(500).json({
+                    error: 'An internal server error occurred',
+                });
+            }
+    
+            if (results.length === 0) {
+                return res.status(404).json({
+                    message: 'Facility data not found',
+                });
+            }
+    
+            const facilityData = results[0]; 
+    
+            res.status(200).json({
+                facility_id: facilityData.id,
+                user_id: facilityData.user_id,
+                facility_name: facilityData.facility_name,
+            });
+        });
+    }
 
 }
