@@ -38,7 +38,7 @@ module.exports = {
             });
         }
 
-        const getUserOrder = `SELECT * FROM orders WHERE id = ?`;
+        const getUserOrder = `SELECT orders.*, facilities.facility_name FROM orders LEFT JOIN facilities ON orders.facility_id = facilities.id WHERE orders.id = ?`;
             
         db.query(getUserOrder, [orderId], (error, results) => {
             if (error) {
@@ -55,6 +55,7 @@ module.exports = {
             const userOrderDetail = results.map(order => ({
                 order_id: order.id,
                 user_id: order.user_id,
+                collector_id: order.facility_id,
                 waste_type: order.waste_type,
                 waste_qty: order.waste_qty,
                 user_notes: order.user_notes,
@@ -66,6 +67,7 @@ module.exports = {
                 pickup_datetime: order.pickup_datetime,
                 pickup_latitude: order.pickup_latitude,
                 pickup_longitude: order.pickup_longitude,
+                facility_name : order.facility_name,
             }));
             res.status(200).json(userOrderDetail);
         });
