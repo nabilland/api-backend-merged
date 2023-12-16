@@ -38,7 +38,7 @@ module.exports = {
             });
         }
 
-        const getUserOrder = `SELECT orders.*, facilities.facility_name FROM orders LEFT JOIN facilities ON orders.facility_id = facilities.id WHERE orders.id = ?`;
+        const getUserOrder = `SELECT orders.*, facilities.facility_name, users.name AS collector_name, (SELECT name FROM users WHERE id = orders.user_id) AS user_name FROM orders LEFT JOIN facilities ON orders.facility_id = facilities.user_id LEFT JOIN users ON orders.facility_id = users.id WHERE orders.id = ?`;
             
         db.query(getUserOrder, [orderId], (error, results) => {
             if (error) {
@@ -56,6 +56,8 @@ module.exports = {
                 order_id: order.id,
                 user_id: order.user_id,
                 collector_id: order.facility_id,
+                user_name: order.user_name,
+                collector_name: order.collector_name,
                 waste_type: order.waste_type,
                 waste_qty: order.waste_qty,
                 user_notes: order.user_notes,
@@ -74,7 +76,7 @@ module.exports = {
     },
 
     getAllOrderDataPickUp: (req, res) => {
-        const getUserOrder = `SELECT * FROM orders WHERE order_status = 'pick_up'`;
+        const getUserOrder = `SELECT orders.*, facilities.facility_name, users.name AS collector_name, (SELECT name FROM users WHERE id = orders.user_id) AS user_name FROM orders LEFT JOIN facilities ON orders.facility_id = facilities.user_id LEFT JOIN users ON orders.facility_id = users.id WHERE order_status = 'pick_up'`;
             
         db.query(getUserOrder, (error, results) => {
             if (error) {
@@ -91,6 +93,9 @@ module.exports = {
             const userOrderData = results.map(order => ({
                 order_id: order.id,
                 user_id: order.user_id,
+                collector_id: order.facility_id,
+                user_name: order.user_name,
+                collector_name: order.collector_name,
                 waste_type: order.waste_type,
                 waste_qty: order.waste_qty,
                 user_notes: order.user_notes,
@@ -102,13 +107,14 @@ module.exports = {
                 pickup_datetime: order.pickup_datetime,
                 pickup_latitude: order.pickup_latitude,
                 pickup_longitude: order.pickup_longitude,
+                facility_name : order.facility_name,
             }));
             res.status(200).json(userOrderData);
         });
     },
 
     getAllOrderDataArrived: (req, res) => {
-        const getUserOrder = `SELECT * FROM orders WHERE order_status = 'arrived'`;
+        const getUserOrder = `SELECT orders.*, facilities.facility_name, users.name AS collector_name, (SELECT name FROM users WHERE id = orders.user_id) AS user_name FROM orders LEFT JOIN facilities ON orders.facility_id = facilities.user_id LEFT JOIN users ON orders.facility_id = users.id WHERE order_status = 'arrived'`;
             
         db.query(getUserOrder, (error, results) => {
             if (error) {
@@ -125,6 +131,9 @@ module.exports = {
             const userOrderData = results.map(order => ({
                 order_id: order.id,
                 user_id: order.user_id,
+                collector_id: order.facility_id,
+                user_name: order.user_name,
+                collector_name: order.collector_name,
                 waste_type: order.waste_type,
                 waste_qty: order.waste_qty,
                 user_notes: order.user_notes,
@@ -136,13 +145,14 @@ module.exports = {
                 pickup_datetime: order.pickup_datetime,
                 pickup_latitude: order.pickup_latitude,
                 pickup_longitude: order.pickup_longitude,
+                facility_name : order.facility_name,
             }));
             res.status(200).json(userOrderData);
         });
     },
 
     getAllOrderDataDelivering: (req, res) => {
-        const getUserOrder = `SELECT * FROM orders WHERE order_status = 'delivering'`;
+        const getUserOrder = `SELECT orders.*, facilities.facility_name, users.name AS collector_name, (SELECT name FROM users WHERE id = orders.user_id) AS user_name FROM orders LEFT JOIN facilities ON orders.facility_id = facilities.user_id LEFT JOIN users ON orders.facility_id = users.id WHERE order_status = 'delivering'`;
             
         db.query(getUserOrder, (error, results) => {
             if (error) {
@@ -159,6 +169,9 @@ module.exports = {
             const userOrderData = results.map(order => ({
                 order_id: order.id,
                 user_id: order.user_id,
+                collector_id: order.facility_id,
+                user_name: order.user_name,
+                collector_name: order.collector_name,
                 waste_type: order.waste_type,
                 waste_qty: order.waste_qty,
                 user_notes: order.user_notes,
@@ -170,13 +183,14 @@ module.exports = {
                 pickup_datetime: order.pickup_datetime,
                 pickup_latitude: order.pickup_latitude,
                 pickup_longitude: order.pickup_longitude,
+                facility_name : order.facility_name,
             }));
             res.status(200).json(userOrderData);
         });
     },
 
     getAllOrderDataDelivered: (req, res) => {
-        const getUserOrder = `SELECT * FROM orders WHERE order_status = 'delivered'`;
+        const getUserOrder = `SELECT orders.*, facilities.facility_name, users.name AS collector_name, (SELECT name FROM users WHERE id = orders.user_id) AS user_name FROM orders LEFT JOIN facilities ON orders.facility_id = facilities.user_id LEFT JOIN users ON orders.facility_id = users.id WHERE order_status = 'delivered'`;
             
         db.query(getUserOrder, (error, results) => {
             if (error) {
@@ -193,6 +207,9 @@ module.exports = {
             const userOrderData = results.map(order => ({
                 order_id: order.id,
                 user_id: order.user_id,
+                collector_id: order.facility_id,
+                user_name: order.user_name,
+                collector_name: order.collector_name,
                 waste_type: order.waste_type,
                 waste_qty: order.waste_qty,
                 user_notes: order.user_notes,
@@ -204,6 +221,7 @@ module.exports = {
                 pickup_datetime: order.pickup_datetime,
                 pickup_latitude: order.pickup_latitude,
                 pickup_longitude: order.pickup_longitude,
+                facility_name : order.facility_name,
             }));
             res.status(200).json(userOrderData);
         });
@@ -236,7 +254,7 @@ module.exports = {
     },
 
     getAllOrderData: (req, res) => {
-        const getUserOrder = `SELECT * FROM orders WHERE order_status = 'pick_up'`;
+        const getUserOrder = `SELECT orders.*, users.name AS user_name FROM orders LEFT JOIN users ON orders.user_id = users.id WHERE order_status = 'pick_up'`;
             
         db.query(getUserOrder, (error, results) => {
             if (error) {
@@ -253,6 +271,7 @@ module.exports = {
             const userOrderData = results.map(order => ({
                 order_id: order.id,
                 user_id: order.user_id,
+                user_name: order.user_name,
                 waste_type: order.waste_type,
                 waste_qty: order.waste_qty,
                 user_notes: order.user_notes,
@@ -278,7 +297,7 @@ module.exports = {
             });
         }
 
-        const getUserOrder = `SELECT * FROM orders WHERE user_id = ? AND order_status = 'delivered'`;
+        const getUserOrder = `SELECT orders.*, facilities.facility_name, users.name FROM orders LEFT JOIN facilities ON orders.facility_id = facilities.user_id LEFT JOIN users ON orders.facility_id = users.id WHERE user_id = ? AND order_status = 'delivered'`;
             
         db.query(getUserOrder, [userId], (error, results) => {
             if (error) {
@@ -295,7 +314,8 @@ module.exports = {
             const userOrderData = results.map(order => ({
                 order_id: order.id,
                 user_id: order.user_id,
-                facility_id: order.facility_id,
+                collector_id: order.facility_id,
+                collector_name: order.name,
                 waste_type: order.waste_type,
                 waste_qty: order.waste_qty,
                 user_notes: order.user_notes,
@@ -307,6 +327,7 @@ module.exports = {
                 pickup_datetime: order.pickup_datetime,
                 pickup_latitude: order.pickup_latitude,
                 pickup_longitude: order.pickup_longitude,
+                facility_name : order.facility_name,
             }));
             res.status(200).json(userOrderData);
         });
@@ -321,7 +342,7 @@ module.exports = {
             });
         }
 
-        const getUserOrder = `SELECT * FROM orders WHERE user_id = ? AND order_status != 'delivered'`;
+        const getUserOrder = `SELECT orders.*, facilities.facility_name, users.name FROM orders LEFT JOIN facilities ON orders.facility_id = facilities.user_id LEFT JOIN users ON orders.facility_id = users.id WHERE orders.user_id = ? AND orders.order_status != 'delivered'`;
             
         db.query(getUserOrder, [userId], (error, results) => {
             if (error) {
@@ -338,7 +359,8 @@ module.exports = {
             const userOrderData = results.map(order => ({
                 order_id: order.id,
                 user_id: order.user_id,
-                facility_id: order.facility_id,
+                collector_id: order.facility_id,
+                collector_name: order.name,
                 waste_type: order.waste_type,
                 waste_qty: order.waste_qty,
                 user_notes: order.user_notes,
@@ -350,6 +372,7 @@ module.exports = {
                 pickup_datetime: order.pickup_datetime,
                 pickup_latitude: order.pickup_latitude,
                 pickup_longitude: order.pickup_longitude,
+                facility_name : order.facility_name,
             }));
             res.status(200).json(userOrderData);
         });
@@ -364,7 +387,7 @@ module.exports = {
             });
         }
 
-        const getCollectorOrder = `SELECT * FROM orders WHERE facility_id = ? AND order_status != 'delivered'`;
+        const getCollectorOrder = `SELECT orders.*, facilities.facility_name, users.name FROM orders LEFT JOIN facilities ON orders.facility_id = facilities.user_id LEFT JOIN users ON orders.user_id = users.id WHERE orders.facility_id = ? AND orders.order_status != 'delivered'`;
             
         db.query(getCollectorOrder, [facilityId], (error, results) => {
             if (error) {
@@ -381,7 +404,8 @@ module.exports = {
             const collectorOrderData = results.map(order => ({
                 order_id: order.id,
                 user_id: order.user_id,
-                facility_id: order.facility_id,
+                collector_id: order.facility_id,
+                user_name: order.name,
                 waste_type: order.waste_type,
                 waste_qty: order.waste_qty,
                 user_notes: order.user_notes,
@@ -393,6 +417,7 @@ module.exports = {
                 pickup_datetime: order.pickup_datetime,
                 pickup_latitude: order.pickup_latitude,
                 pickup_longitude: order.pickup_longitude,
+                facility_name : order.facility_name,
             }));
             res.status(200).json(collectorOrderData);
         });
@@ -407,7 +432,7 @@ module.exports = {
             });
         }
 
-        const getCollectorOrder = `SELECT * FROM orders WHERE facility_id = ? AND order_status = 'delivered'`;
+        const getCollectorOrder = `SELECT orders.*, facilities.facility_name, users.name FROM orders LEFT JOIN facilities ON orders.facility_id = facilities.user_id LEFT JOIN users ON orders.user_id = users.id WHERE orders.facility_id = ? AND orders.order_status = 'delivered'`;
             
         db.query(getCollectorOrder, [facilityId], (error, results) => {
             if (error) {
@@ -424,7 +449,8 @@ module.exports = {
             const collectorOrderData = results.map(order => ({
                 order_id: order.id,
                 user_id: order.user_id,
-                facility_id: order.facility_id,
+                collector_id: order.facility_id,
+                user_name: order.name,
                 waste_type: order.waste_type,
                 waste_qty: order.waste_qty,
                 user_notes: order.user_notes,
@@ -436,6 +462,7 @@ module.exports = {
                 pickup_datetime: order.pickup_datetime,
                 pickup_latitude: order.pickup_latitude,
                 pickup_longitude: order.pickup_longitude,
+                facility_name : order.facility_name,
             }));
             res.status(200).json(collectorOrderData);
         });
