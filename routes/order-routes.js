@@ -21,7 +21,7 @@ router.get('/delivered', userMiddleware.userAuthorization('collector'), orderCon
 
 // Route to create order by ID (userId)
 router.post('/create/:id', userMiddleware.userAuthorization('user'), orderController.createOrder); //userId
-// Route to get all order data by ID (userId)
+// Route to get all order data by ID (orderId)
 router.get('/:id', orderController.getOrderDetail); //orderId
 // Route to update order status by ID (orderId)
 router.put('/update-status/:id', userMiddleware.userAuthorization('collector'), orderController.updateOrderStatus); //orderId
