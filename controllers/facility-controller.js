@@ -160,7 +160,7 @@ module.exports = {
             });
         }
 
-        const { id } = req.body;
+        const { facility_name } = req.body;
 
         // Check if data for the user already exists in collectors table
         const selectQuery = `SELECT * FROM facilities WHERE user_id = ?`;
@@ -175,7 +175,7 @@ module.exports = {
             if (results && results.length > 0) {
                 // Data already exists, perform UPDATE
                 const updateQuery = `UPDATE facilities SET facility_name = ? WHERE user_id = ?`;
-                db.query(updateQuery, [id, userId], (error) => {
+                db.query(updateQuery, [facility_name, userId], (error) => {
                     if (error) {
                         console.error('Error updating facility name:', error);
                         return res.status(500).json({
