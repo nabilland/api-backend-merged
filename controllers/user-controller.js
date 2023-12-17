@@ -37,7 +37,7 @@ module.exports = {
 
     updateUserProfile: (req, res) => {
         const userId = req.params.id;
-        const { phone, name } = req.body;
+        const { phone, name, email } = req.body;
 
         if(!userId){
             return res.status(400).json({
@@ -45,9 +45,9 @@ module.exports = {
             });
         }
 
-        const updateQuery = `UPDATE users SET phone = ?, name = ? WHERE id = ?`;
+        const updateQuery = `UPDATE users SET phone = ?, name = ?, email = ? WHERE id = ?`;
 
-        db.query(updateQuery, [phone, name, userId], (error) => {
+        db.query(updateQuery, [phone, name, email, userId], (error) => {
             if(error) {
                 console.error('Error updating user profile:', error);
                 return res.status(500).json({
